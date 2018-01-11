@@ -33,7 +33,7 @@ type SCIONBox struct {
 	Updated        time.Time
 }
 
-// Returns all Attachment Point ASes
+// Returns all boxes
 func GetAllSCIONBox() ([]*SCIONBox, error) {
 	var bl []*SCIONBox
 	_, err := o.QueryTable(new(SCIONBox)).All(&bl)

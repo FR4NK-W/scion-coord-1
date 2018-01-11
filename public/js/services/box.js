@@ -2,7 +2,7 @@ angular.module('scionApp')
     .factory('boxService', ["$http", "$q", function ($http, $q) {
         return {
             boxPageData: function () {
-                return $http.get('/api/adminPageData').then(function (response) {
+                return $http.get('/api/boxPageData').then(function (response) {
                     console.log(response);
                     return response.data;
                 });

@@ -37,7 +37,7 @@ import (
 	"github.com/netsec-ethz/scion-coord/utility/geolocation"
 	"github.com/netsec-ethz/scion-coord/utility/topologyAlgorithm"
 	"github.com/netsec-ethz/scion/go/lib/addr"
-	"github.com/netsec-ethz/scion-coord/email"
+	//"github.com/netsec-ethz/scion-coord/email"
 )
 
 type SCIONBoxController struct {
@@ -377,14 +377,32 @@ func (s *SCIONBoxController) RegisterSB(w http.ResponseWriter, r *http.Request) 
 	return
 }
 
+
+type boxPageData struct {
+	User         user
+	Boxes []*models.SCIONBox
+}
+
+
 func (s *SCIONBoxController) BoxInfos(w http.ResponseWriter, r *http.Request) {
-	boxes, err := models.GetAllSCIONBox(r)
+	user, err := populateUserData(r)
+	if err != nil {
+		log.Printf("Error authenticating user: %v", err)
+		s.Forbidden(w, err, "Error authenticating user")
+		return
+	}
+	boxes, err := models.GetAllSCIONBox()
 	if err != nil {
 		log.Printf("Error getting box infos: %v", err)
 		return
 	}
 
-	s.JSON(&boxes, w, r)
+	res := boxPageData {
+		User: user,
+		Boxes: boxes,
+	}
+
+	s.JSON(&res, w, r)
 	return
 }
 
