@@ -33,6 +33,16 @@ type SCIONBox struct {
 	Updated        time.Time
 }
 
+// Returns all Attachment Point ASes
+func GetAllSCIONBox() ([]*SCIONBox, error) {
+	var bl []*SCIONBox
+	_, err := o.QueryTable(new(SCIONBox)).All(&bl)
+	if err != nil {
+		return nil, err
+	}
+	return bl, err
+}
+
 func FindSCIONBoxByMAC(mac string) (*SCIONBox, error) {
 	v := new(SCIONBox)
 	err := o.QueryTable(v).Filter("MAC", mac).RelatedSel().One(v)

@@ -231,6 +231,11 @@ func main() {
 	router.Handle("/api/sendInvitations", adminChain.ThenFunc(
 		adminController.SendInvitationEmails)).Methods(http.MethodPost)
 
+	// box page
+	router.Handle("/api/boxPageData", adminChain.ThenFunc(scionBoxController.BoxInfos))
+	router.Handle("/api/updateRegistrations", adminChain.ThenFunc(
+		scionBoxController.RegisterSB)).Methods(http.MethodPost)
+
 	// generates a SCIONLab VM
 	// TODO(ercanucan): fix the authentication
 	router.Handle("/api/as/generateVM", userChain.ThenFunc(

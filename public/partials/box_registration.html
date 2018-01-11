@@ -1,0 +1,104 @@
+<style>
+    td, th {
+        padding-right: 15px;
+    }
+</style>
+
+<div class="scionbox-box" ng-show="user.IsAdmin">
+  <div class="spacer"></div>
+  <h3>Welcome to the SCIONLab Box registration Interface!</h3>
+
+  <div class="spacer"></div>
+  <h3>SCIONBox registrations</h3>
+  <p>
+    Please make sure that at least the user's email and the MAC address of the Box are recorded:
+  </p>
+  <br/>
+
+  <form name="registrationsForm">
+    <!--Use invisible button such that pressing "Enter" submits the form.-->
+    <div class="row">
+      <button
+          style="overflow: visible !important; height: 0 !important; width: 0 !important; margin: 0 !important; border: 0 !important; padding: 0 !important; display: block !important;"
+          type="submit" ng-click="updateRegistrations(registrations)"></button>
+    </div>
+    <table width="100%">
+      <tr>
+        <th>User Email</th>
+        <th>Shipping status</th>
+        <th>Update required</th>
+        <th>Box MAC address</th>
+      </tr>
+      <tr ng-repeat="i in registrations" ng-class="{'has-error' : i.error}">
+          <td>
+          <ng-form name="emailForm">
+            <div class="form-group has-feedback">
+              <input type="email" class="form-control" ng-model="i.UserEmail" name="email"
+                     placeholder="test@example.com"
+                     required
+                     ng-blur="i.email_entered=true">
+              <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+              <span class="error"
+                    ng-if="emailForm.email.$error.email && i.email_entered">Please enter a valid email address.</span>
+              <span class="error" ng-if="i.error">{{i.error}}</span>
+            </div>
+          </ng-form>
+        </td>
+        <td>
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" ng-model="i.ShippingStatus" name="status"
+                   placeholder="Ready for shipping" required>
+            <span class="glyphicon glyphicon-arrow-right form-control-feedback"></span>
+          </div>
+        </td>
+        <td>
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" ng-model="i.UpdateRequired" name="update"
+                   placeholder="No">
+            <span class="glyphicon glyphicon-cloud-download form-control-feedback"></span>
+          </div>
+        </td>
+        <td>
+          <div class="form-group has-feedback">
+            <input type="text" class="form-control" ng-model="i.MAC" name="mac"
+                   placeholder="xx:xx:xx:xx:xx:xx">
+            <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="row">
+      <div class="col-xs-2">
+        <div class="btn-group btn-group-justified">
+          <div class="btn-group" ng-if="registrations.length < 10">
+            <button class="btn btn-success" ng-click="addChoice()" formnovalidate>+</button>
+          </div>
+          <div class="btn-group" ng-if="registrations.length > 1">
+            <button class="btn btn-warning" ng-click="removeChoice()" formnovalidate>-</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="row">
+      <div class="col-xs-2">
+        <button type="submit" class="btn btn-primary btn-block"
+                ng-click="updateRegistrations(registrations)">Update Box registrations
+        </button>
+      </div>
+    </div>
+  </form>
+  <div class="spacer"></div>
+  <div ng-show="error" class="alert alert-danger alert-dismissible fade in">
+    <button type="button" class="close" aria-label="Close" ng-click="dismissError()">&times;
+    </button>
+    {{error}}
+  </div>
+  <div ng-show="message" class="alert alert-success alert-dismissible fade in">
+    <button type="button" class="close" aria-label="Close" ng-click="dismissSuccess()">&times;
+    </button>
+    {{message}}
+  </div>
+  <div class="spacer"></div>
+</div>

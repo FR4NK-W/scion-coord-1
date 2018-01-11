@@ -33,6 +33,10 @@ const scionApp = angular.module('scionApp', [
             templateUrl: '/public/partials/admin.html',
             controller: 'adminCtrl'
         })
+        .when('/box', {
+            templateUrl: '/public/partials/box_registration.html',
+            controller: 'boxCtrl'
+        })
         .otherwise({
             redirectTo: '/login'
         });

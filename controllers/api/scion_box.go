@@ -37,6 +37,7 @@ import (
 	"github.com/netsec-ethz/scion-coord/utility/geolocation"
 	"github.com/netsec-ethz/scion-coord/utility/topologyAlgorithm"
 	"github.com/netsec-ethz/scion/go/lib/addr"
+	"github.com/netsec-ethz/scion-coord/email"
 )
 
 type SCIONBoxController struct {
@@ -333,6 +334,60 @@ func (s *SCIONBoxController) ConnectNewBox(w http.ResponseWriter, r *http.Reques
 	}
 	s.serveGen(slas.UserMail, w, r)
 }
+
+
+type boxRegistration struct {
+	IP        string
+	UserMail  string
+	UserEmail string
+	error string
+	email_entered string
+	ShippingStatus string
+	UpdateRequired string
+	MAC string
+}
+type boxRequests []boxRegistration
+
+// Register a new SCIONBox
+func (s *SCIONBoxController) RegisterSB(w http.ResponseWriter, r *http.Request) {
+	var boxRegs = boxRequests{}
+	log.Printf("New registrations: %v", r.Body)
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&boxRegs); err != nil {
+		log.Printf("Error decoding JSON: %v, %v", r.Body, err)
+		return
+	}
+
+	failedRegs := []string{}
+	for _, boxReg := range boxRegs {
+		log.Printf("New registration: %v", boxReg)
+		scBox := &models.SCIONBox{
+			MAC:            boxReg.MAC,
+			UserEmail:      boxReg.UserEmail,
+			Shipping:       boxReg.ShippingStatus,
+			UpdateRequired: boxReg.UpdateRequired == "True",
+		}
+		if err := scBox.Insert(); err != nil {
+			log.Printf("Error inserting: %v", err)
+			failedRegs = append(failedRegs, boxReg.MAC)
+		}
+	}
+
+	s.JSON(map[string][]string{"boxes": failedRegs}, w, r)
+	return
+}
+
+func (s *SCIONBoxController) BoxInfos(w http.ResponseWriter, r *http.Request) {
+	boxes, err := models.GetAllSCIONBox(r)
+	if err != nil {
+		log.Printf("Error getting box infos: %v", err)
+		return
+	}
+
+	s.JSON(&boxes, w, r)
+	return
+}
+
 
 // this function inserts a new SCIONBox into the database
 func (s *SCIONBoxController) updateDBnewSB(sb *models.SCIONBox, neighbors []topologyAlgorithm.Neighbor, isd int, ip string) (*models.SCIONLabAS, error) {

@@ -24,6 +24,7 @@
   <script src="/public/js/controllers/login.js"></script>
   <script src="/public/js/controllers/user.js"></script>
   <script src="/public/js/controllers/admin.js"></script>
+  <script src="/public/js/controllers/box.js"></script>
   <script src="/public/js/controllers/header.js"></script>
   <script src="/public/js/controllers/resend.js"></script>
   <script src="/public/js/services/register.js"></script>
@@ -31,6 +32,7 @@
   <script src="/public/js/services/login.js"></script>
   <script src="/public/js/services/user.js"></script>
   <script src="/public/js/services/admin.js"></script>
+  <script src="/public/js/services/box.js"></script>
   <script src="/public/js/services/resend.js"></script>
   <script src="/public/js/angular-recaptcha.min.js"></script>
   <script src="/public/js/lightbox-plus-jquery.min.js"></script>
@@ -44,13 +46,20 @@
       <ul class="nav nav-pills pull-right">
         <li role="presentation" ng-if="isActive('/login') || isActive('/register')"
             ng-class="{ active: isActive('/login') }"><a href="#/login">Login</a></li>
+
         <li role="presentation" ng-if="isActive('/login') || isActive('/register')"
             ng-class="{ active: isActive('/register') }"><a href="#/register">Register</a></li>
-        <li role="presentation" ng-if="user.IsAdmin && (isActive('/user') || isActive('/admin'))"
+
+        <li role="presentation" ng-if="user.IsAdmin && (isActive('/user') || isActive('/admin') || isActive('/box'))"
+            ng-class="{ active: isActive('/box') }"><a href="#/box">SCIONLab</a></li>
+
+        <li role="presentation" ng-if="user.IsAdmin && (isActive('/user') || isActive('/admin') || isActive('/box'))"
             ng-class="{ active: isActive('/admin') }"><a href="#/admin">Admin</a></li>
-        <li role="presentation" ng-if="user.IsAdmin && (isActive('/user') || isActive('/admin'))"
+
+        <li role="presentation" ng-if="user.IsAdmin && (isActive('/user') || isActive('/admin') || isActive('/box'))"
             ng-class="{ active: isActive('/user') }"><a href="#/user">User</a></li>
-        <li role="presentation" ng-if="isActive('/user') || isActive('/admin')">
+
+        <li role="presentation" ng-if="isActive('/user') || isActive('/admin') || isActive('/box')">
           <a target="_self" href="" ng-click="logout()">Logout</a></li>
       </ul>
     </nav>
