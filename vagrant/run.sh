@@ -46,14 +46,10 @@ run_linux() {
             echo "[SCIONLabVM] $VB is already installed"
         else
             echo "[SCIONLabVM] Installing $VB"
-            wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
-            wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
-            sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian xenial contrib" >> /etc/apt/sources.list.d/virtualbox.list'
-            sudo apt remove virtualbox virtualbox-5.1 || true
-            sudo apt-get --no-remove --yes install virtualbox-5.2
+            sudo apt-get --no-remove --yes install $VB 
         fi
-        VERS=$(vagrant version | grep "Installed Version:" | sed -n 's/^Installed Version: \(.*\)$/\1/p')
-        if verleq 1.9 $VERS; then
+        VERS=$(vagrant version 2>&1 | grep "Installed Version:" | sed -n 's/^Installed Version: \(.*\)$/\1/p')
+        if verleq 1.8 $VERS; then
             echo "[SCIONLabVM] $VG is already installed"
         elif dpkg --get-selections | grep -q "^$VG[[:space:]]*install$" >/dev/null; then
             echo "[SCIONLabVM] ${RED}Warning!${NC} Current version of $VG in your system is out of date."
@@ -65,7 +61,7 @@ run_linux() {
                         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key AD319E0F7CFFA38B4D9F6E55CE3F3DE92099F7A4 \
               || { echo "[SCIONLabVM] Fatal: Failed to retrieve key for the vagrant-deb.linestarve.com repository."; exit 1; }
                         sudo apt-get update
-                        sudo apt-get install --only-upgrade $VG;
+                        sudo apt-get --no-remove install $VG;
                     break;;
                     [Nn]*) echo "[SCIONLabVM] Closing SCIONLabVM installation."; exit 1;;
                     *) ;;
